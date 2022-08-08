@@ -35,11 +35,17 @@ class NeuralNetwork(LightningModule):
 The LightningModule has many convenience methods, but the core ones you need to know about are:
 
 `__init__` : Define computations here
+
 `forward` : Use for inference only (separate from training_step)
+
 `training_step` : the complete training loop
+
 `validation_step` : the complete validation loop
+
 `test_step` : the complete test loop
+
 `predict_step` : the complete prediction loop
+
 `configure_optimizers` : define optimizers and LR schedulers
 
 In our `__init__`, we define `flatten`, `linear_relu_stack` (our neural network), and `loss_fn`.
