@@ -1,6 +1,6 @@
 # Quickstart
 
-This section will give  you an example of how `Lightning` can ease your PyTorch programming experience. All the code is modified from [PyTorch's Quickstart](https://pytorch.org/tutorials/beginner/basics/quickstart_tutorial.html). We also want to show you what the difference between normal PyTorch and Lightning
+This section will give  you an example of how `Lightning` can ease your PyTorch programming experience. All the code is modified from [PyTorch's Quickstart](https://pytorch.org/tutorials/beginner/basics/quickstart_tutorial.html). We also want to show you what the difference between normal PyTorch and Lightning.
 
 `Lightning` is based on `PyTorch` so you can use PyTorch inside Lightning code.
 
