@@ -48,6 +48,7 @@ The LightningModule has many convenience methods, but the core ones you need to 
 
 `configure_optimizers` : define optimizers and LR schedulers
 
+
 In our `__init__`, we define `flatten`, `linear_relu_stack` (our neural network), and `loss_fn`.
 
 Next is our `forward`, return the output from our network.
