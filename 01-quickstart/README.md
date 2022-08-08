@@ -159,11 +159,11 @@ test_data = datasets.FashionMNIST(
 
 We can use PyTorch's DataLoader with Lightning seamlessly.
 ```python
-batch_size = 64
-
+BATCH_SIZE = 64
+NUM_WORKER = 4
 # Create data loaders.
-train_dataloader = DataLoader(training_data, batch_size=batch_size)
-test_dataloader = DataLoader(test_data, batch_size=batch_size)
+train_dataloader = DataLoader(training_data, batch_size=BATCH_SIZE, num_workers=NUM_WORKER)
+test_dataloader = DataLoader(test_data, batch_size=BATCH_SIZE, num_workers=NUM_WORKER)
 ```
 
 The main reason we prefer Lightning is convenience. If we have all the models and dataloaders, training is quite easy now!
