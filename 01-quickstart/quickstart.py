@@ -56,11 +56,11 @@ test_data = datasets.FashionMNIST(
     download=True,
     transform=ToTensor(),
 )
-batch_size = 64
-
+BATCH_SIZE = 64
+NUM_WORKER = 4
 # Create data loaders.
-train_dataloader = DataLoader(training_data, batch_size=batch_size)
-test_dataloader = DataLoader(test_data, batch_size=batch_size)
+train_dataloader = DataLoader(training_data, batch_size=BATCH_SIZE, num_workers=NUM_WORKER)
+test_dataloader = DataLoader(test_data, batch_size=BATCH_SIZE, num_workers=NUM_WORKER)
 
 model = NeuralNetwork()
 trainer = Trainer(accelerator='gpu', devices=1, max_epochs=10)
