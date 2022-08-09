@@ -2,7 +2,7 @@ from pytorch_lightning import LightningModule
 from torch import nn
 from torch.optim import SGD
 
-class NeuralNetwork(LightningModule):
+class LitNeuralNetwork(LightningModule):
     def __init__(self):
         super().__init__()
         self.flatten = nn.Flatten()
@@ -34,6 +34,14 @@ class NeuralNetwork(LightningModule):
         loss = self.loss_fn(pred, label)
 
         self.log("test-loss : ", loss)
+
+    def validation_step(self, batch, batch_idx):
+        data, label = batch
+
+        pred = self.linear_relu_stack(self.flatten(data))
+        loss = self.loss_fn(pred, label)
+
+        self.log("val-loss : ", loss)
 
     def configure_optimizers(self):
         optimizer = SGD(self.parameters(), lr=1e-3)
