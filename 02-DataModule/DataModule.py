@@ -8,13 +8,21 @@ class LitMNISTDataset(LightningDataModule):
         self.root = root
         self.batch_size = batch_size
 
-    def prepare_data(self) -> None:
-        return super().prepare_data()
+        # transform PIL to Tensor, so it can be use with the model
+        self.transform = transforms.Compose([
+            transforms.ToTensor()
+        ])
 
+    # Only on one GPU
+    def prepare_data(self) -> None:
+        datasets.MNIST(self.root, train=True, download=True) # Download the training set
+        datasets.MNIST(self.root, train=False, download=True) # Download the test set
+
+    # All GPU
     def setup(self, stage=None):
-        self.mnist_test = datasets.MNIST(self.root, train=False, download=True, transform=transforms.ToTensor())
-        self.mnist_predict = datasets.MNIST(self.root, train=False, download=True, transform=transforms.ToTensor())
-        mnist_full = datasets.MNIST(self.root, train=True, download=True, transform=transforms.ToTensor())
+        self.mnist_test = datasets.MNIST(self.root, train=False, transform=self.transform)
+        self.mnist_predict = datasets.MNIST(self.root, train=False, transform=self.transform)
+        mnist_full = datasets.MNIST(self.root, train=True, download=True, transform=self.transform)
         self.mnist_train, self.mnist_val = random_split(mnist_full, [55000, 5000])
 
     def train_dataloader(self):
@@ -23,8 +31,8 @@ class LitMNISTDataset(LightningDataModule):
     def test_dataloader(self):
         return DataLoader(self.mnist_test, batch_size=self.batch_size)
 
-    # def val_dataloader(self):
-    #     return DataLoader(self.mnist_val, batch_size=self.batch_size)
+    def val_dataloader(self):
+        return DataLoader(self.mnist_val, batch_size=self.batch_size)
     
     def predict_dataloader(self):
         return DataLoader(self.mnist_predict, batch_size=self.batch_size)
