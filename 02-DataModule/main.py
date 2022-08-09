@@ -1,5 +1,5 @@
 from DataModule import LitMNISTDataset
-from Model import NeuralNetwork
+from Model import LitNeuralNetwork
 from pytorch_lightning import Trainer
 
 dataset = LitMNISTDataset("./data")
