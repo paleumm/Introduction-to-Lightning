@@ -62,7 +62,7 @@ class NeuralNetwork(LightningModule):
     
 ```
 
-`training_step` has a significant role in Lightning. It defines how we want our network to train in each step. This will return a loss for each step.
+`training_step` has a significant role in Lightning. It defines how we want our network to train in each step. This will return a loss for each step. The `batch_idx` is for indexing.
 ```python
 class NeuralNetwork(LightningModule):
     def __init__(self): 
