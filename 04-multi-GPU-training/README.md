@@ -31,16 +31,16 @@ class LitMNISTDataset(LightningDataModule):
         self.mnist_train, self.mnist_val = random_split(mnist_full, [55000, 5000])
 
     def train_dataloader(self):
-        return DataLoader(self.mnist_train, batch_size=self.batch_size, num_workers=num_workers)
+        return DataLoader(self.mnist_train, batch_size=self.batch_size, num_workers=self.num_workers)
     
     def test_dataloader(self):
-        return DataLoader(self.mnist_test, batch_size=self.batch_size, num_workers=num_workers)
+        return DataLoader(self.mnist_test, batch_size=self.batch_size, num_workers=self.num_workers)
 
     def val_dataloader(self):
-        return DataLoader(self.mnist_val, batch_size=self.batch_size, num_workers=num_workers)
+        return DataLoader(self.mnist_val, batch_size=self.batch_size, num_workers=self.num_workers)
     
     def predict_dataloader(self):
-        return DataLoader(self.mnist_predict, batch_size=self.batch_size, num_workers=num_workers)
+        return DataLoader(self.mnist_predict, batch_size=self.batch_size, num_workers=self.num_workers)
 ```
 
 We'll add `sync_dist=True` inside the `self.log()` in LitAutoEncoder.py's **test_step** and **validation_step**. This is for syncing all the GPUs after each test or validation step.
