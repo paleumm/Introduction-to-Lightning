@@ -43,7 +43,7 @@ class LitMNISTDataset(LightningDataModule):
         return DataLoader(self.mnist_predict, batch_size=self.batch_size, num_workers=self.num_workers)
 ```
 
-We'll add `sync_dist=True` inside the `self.log()` in LitAutoEncoder.py's **test_step** and **validation_step**. This is for syncing all the GPUs after each test or validation step.
+We'll add `sync_dist=True` inside the `self.log()` in `LitAutoEncoder.py`'s **test_step** and **validation_step**. This is for syncing all the GPUs after each test or validation step.
 ```python
 import torch
 from torch import nn
