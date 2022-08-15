@@ -18,7 +18,7 @@ class Decoder(nn.Module):
     def forward(self, x):
         return self.l1(x)
 
-from pytorch_lightning import LightningModule
+from pytorch_lightning import LightningModule, torchmetrics
 from torch.optim import Adam
 
 class LitAutoEncoder(LightningModule):
@@ -26,6 +26,7 @@ class LitAutoEncoder(LightningModule):
         super().__init__()
         self.encoder = encoder
         self.decoder = decoder
+        self.valid_acc = torchmetrics.Accuracy()
 
     def training_step(self, batch, batch_idx):
         # training_step defines the train loop.
@@ -51,7 +52,13 @@ class LitAutoEncoder(LightningModule):
         z = self.encoder(x)
         x_hat = self.decoder(z)
         loss = F.mse_loss(x_hat, x)
+
+        self.valid_acc.update(x_hat, x)
         self.log("Val-Loss : ", loss)
+
+    def validation_epoch_end(self, outputs):
+        self.log('valid_acc_epoch', self.valid_acc.compute())
+        self.valid_acc.reset()
 
     def configure_optimizers(self):
         optimizer = Adam(self.parameters(), lr=1e-3)
