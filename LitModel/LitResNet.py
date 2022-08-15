@@ -48,6 +48,120 @@ class LitResNet(LightningModule):
         optimizer = SGD(self.parameters(), lr=1e-3)
         return optimizer
 
+class LitResNet50(LightningModule):
+    def __init__(self, num_classes = 1000, image_channels = 3):
+        super().__init__()
+        self.ResNet = ResNet(block, [3, 4, 6, 3], image_channels, num_classes)
+        self.loss_fn = nn.CrossEntropyLoss()
+
+    def forward(self, x):
+        return self.ResNet(x)
+
+    def training_step(self, batch, batch_idx):
+        data, label = batch
+
+        pred = self.ResNet(data)
+        loss = self.loss_fn(pred, label)
+
+        self.log("train-loss : ", loss)
+        return loss 
+
+    def test_step(self, batch, batch_idx):
+        data, label = batch
+
+        pred = self.ResNet(data)
+        loss = self.loss_fn(pred, label)
+
+        self.log("test-loss : ", loss)
+
+    def validation_step(self, batch, batch_idx):
+        data, label = batch
+
+        pred = self.ResNet(data)
+        loss = self.loss_fn(pred, label)
+
+        self.log("val-loss : ", loss)
+
+    def configure_optimizers(self):
+        optimizer = SGD(self.parameters(), lr=1e-3)
+        return optimizer
+
+class LitResNet101(LightningModule):
+    def __init__(self, num_classes = 1000, image_channels = 3):
+        super().__init__()
+        self.ResNet = ResNet(block, [3, 4, 23, 3], image_channels, num_classes)
+        self.loss_fn = nn.CrossEntropyLoss()
+
+    def forward(self, x):
+        return self.ResNet(x)
+
+    def training_step(self, batch, batch_idx):
+        data, label = batch
+
+        pred = self.ResNet(data)
+        loss = self.loss_fn(pred, label)
+
+        self.log("train-loss : ", loss)
+        return loss 
+
+    def test_step(self, batch, batch_idx):
+        data, label = batch
+
+        pred = self.ResNet(data)
+        loss = self.loss_fn(pred, label)
+
+        self.log("test-loss : ", loss)
+
+    def validation_step(self, batch, batch_idx):
+        data, label = batch
+
+        pred = self.ResNet(data)
+        loss = self.loss_fn(pred, label)
+
+        self.log("val-loss : ", loss)
+
+    def configure_optimizers(self):
+        optimizer = SGD(self.parameters(), lr=1e-3)
+        return optimizer
+
+class LitResNet152(LightningModule):
+    def __init__(self, num_classes = 1000, image_channels = 3):
+        super().__init__()
+        self.ResNet = ResNet(block, [3, 8, 36, 3], image_channels, num_classes)
+        self.loss_fn = nn.CrossEntropyLoss()
+
+    def forward(self, x):
+        return self.ResNet(x)
+
+    def training_step(self, batch, batch_idx):
+        data, label = batch
+
+        pred = self.ResNet(data)
+        loss = self.loss_fn(pred, label)
+
+        self.log("train-loss : ", loss)
+        return loss 
+
+    def test_step(self, batch, batch_idx):
+        data, label = batch
+
+        pred = self.ResNet(data)
+        loss = self.loss_fn(pred, label)
+
+        self.log("test-loss : ", loss)
+
+    def validation_step(self, batch, batch_idx):
+        data, label = batch
+
+        pred = self.ResNet(data)
+        loss = self.loss_fn(pred, label)
+
+        self.log("val-loss : ", loss)
+
+    def configure_optimizers(self):
+        optimizer = SGD(self.parameters(), lr=1e-3)
+        return optimizer
+
 class block(nn.Module):
     def __init__(self, in_channels, intermediate_channels, identity_downsample=None, stride=1) -> None:
         super(block, self).__init__()
