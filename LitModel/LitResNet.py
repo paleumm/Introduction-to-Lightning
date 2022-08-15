@@ -1,14 +1,52 @@
 from turtle import forward
 from pytorch_lightning import LightningModule
 from torch import nn, cuda, randn
+from torch.optim import SGD
 
 '''
 PyTorch's Resnet implementation is reference from https://www.analyticsvidhya.com/blog/2021/06/build-resnet-from-scratch-with-python/
 '''
 
+resnet = {'ResNet50':[3, 4, 6, 3], 'ResNet101':[3, 4, 23, 3], 'ResNet152':[3, 8, 36, 3]}
+default_resnet = 'ResNet50'
+
 class LitResNet(LightningModule):
-    def __init__(self, type:str = 'ResNet50', num_classes = 1000, image_channels = 3):
+    def __init__(self, resnet_type:str = default_resnet, num_classes = 1000, image_channels = 3):
         super().__init__()
+        self.ResNet = ResNet(block, resnet[default_resnet], image_channels, num_classes)
+        self.loss_fn = nn.CrossEntropyLoss()
+
+    def forward(self, x):
+        return self.ResNet(x)
+
+    def training_step(self, batch, batch_idx):
+        data, label = batch
+
+        pred = self.ResNet(data)
+        loss = self.loss_fn(pred, label)
+
+        self.log("train-loss : ", loss)
+        return loss 
+
+    def test_step(self, batch, batch_idx):
+        data, label = batch
+
+        pred = self.ResNet(data)
+        loss = self.loss_fn(pred, label)
+
+        self.log("test-loss : ", loss)
+
+    def validation_step(self, batch, batch_idx):
+        data, label = batch
+
+        pred = self.ResNet(data)
+        loss = self.loss_fn(pred, label)
+
+        self.log("val-loss : ", loss)
+
+    def configure_optimizers(self):
+        optimizer = SGD(self.parameters(), lr=1e-3)
+        return optimizer
 
 class block(nn.Module):
     def __init__(self, in_channels, intermediate_channels, identity_downsample=None, stride=1) -> None:
