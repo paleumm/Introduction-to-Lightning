@@ -53,13 +53,36 @@ class block(nn.Module):
         super(block, self).__init__()
 
         self.expansion = 4
-        self.conv1 = nn.Conv2d(in_channels=in_channels, out_channels=intermediate_channels, kernel_size=1, stride=1, padding=0, bias=False)
+        self.conv1 = nn.Conv2d(
+            in_channels=in_channels, 
+            out_channels=intermediate_channels, 
+            kernel_size=1, 
+            stride=1, 
+            padding=0, 
+            bias=False
+        )
         self.bn1 = nn.BatchNorm2d(intermediate_channels)
-        self.conv2 = nn.Conv2d(in_channels=intermediate_channels, out_channels=intermediate_channels, kernel_size=3, stride=stride, padding=1, bias=False)
+        self.conv2 = nn.Conv2d(
+            in_channels=intermediate_channels, 
+            out_channels=intermediate_channels, 
+            kernel_size=3, 
+            stride=stride, 
+            padding=1, 
+            bias=False
+        )
         self.bn2 = nn.BatchNorm2d(intermediate_channels)
-        self.conv3 = nn.Conv2d(in_channels=intermediate_channels, out_channels=intermediate_channels * self.expansion, kernel_size=1, stride=1, padding=0, bias=False)
+        self.conv3 = nn.Conv2d(
+            in_channels=intermediate_channels, 
+            out_channels=intermediate_channels * self.expansion, 
+            kernel_size=1, 
+            stride=1, 
+            padding=0, 
+            bias=False
+        )
         self.bn3 = nn.BatchNorm2d(intermediate_channels * self.expansion)
-        self.layers = nn.Sequential(self.conv1, self.bn1, self.conv2, self.bn2, self.conv3, self.bn3,)
+        self.layers = nn.Sequential(
+            self.conv1, self.bn1, self.conv2, self.bn2, self.conv3, self.bn3,
+        )
         self.relu = nn.ReLU()
         self.identity_downsample = identity_downsample
         self.stride = stride
@@ -86,15 +109,26 @@ class ResNet(nn.Module):
         self.relu = nn.ReLU()
         self.maxpool = nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
 
-        self.layer1 = self._make_layer(block, layers[0], intermediate_channels=64, stride=1)
-        self.layer2 = self._make_layer(block, layers[1], intermediate_channels=128, stride=2)
-        self.layer3 = self._make_layer(block, layers[2], intermediate_channels=256, stride=2)
-        self.layer4 = self._make_layer(block, layers[3], intermediate_channels=512, stride=2)
+        self.layer1 = self._make_layer(
+            block, layers[0], intermediate_channels=64, stride=1
+        )
+        self.layer2 = self._make_layer(
+            block, layers[1], intermediate_channels=128, stride=2
+        )
+        self.layer3 = self._make_layer(
+            block, layers[2], intermediate_channels=256, stride=2
+        )
+        self.layer4 = self._make_layer(
+            block, layers[3], intermediate_channels=512, stride=2
+        )
 
         self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
         self.fc = nn.Linear(512 * 4, num_classes)
 
-        self.layers = nn.Sequential(self.conv1, self.bn1, self.relu, self.maxpool, self.layer1, self.layer2, self.layer3, self.layer4, self.avgpool)
+        self.layers = nn.Sequential(
+            self.conv1, self.bn1, self.relu, self.maxpool, 
+            self.layer1, self.layer2, self.layer3, self.layer4, self.avgpool
+        )
 
 
     def forward(self, x):
@@ -108,9 +142,14 @@ class ResNet(nn.Module):
         layers = []
 
         if stride != 1 or self.in_channels != intermediate_channels * 4:
-            identity_downsample = nn.Sequential(nn.Conv2d(in_channels=self.in_channels, out_channels=intermediate_channels * 4, kernel_size=1, stride=stride, bias=False), nn.BatchNorm2d(intermediate_channels * 4))
+            identity_downsample = nn.Sequential(
+                nn.Conv2d(in_channels=self.in_channels, out_channels=intermediate_channels * 4, kernel_size=1, stride=stride, bias=False), 
+                nn.BatchNorm2d(intermediate_channels * 4)
+            )
 
-        layers.append(block(self.in_channels, intermediate_channels, identity_downsample, stride, ))
+        layers.append(
+            block(self.in_channels, intermediate_channels, identity_downsample, stride, )
+        )
         self.in_channels = intermediate_channels * 4
 
         for i in range(num_residual_blocks - 1):
