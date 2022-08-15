@@ -1,5 +1,9 @@
 from torch import nn
 
+'''
+PyTorch's Resnet implementation is reference from https://www.analyticsvidhya.com/blog/2021/06/build-resnet-from-scratch-with-python/
+'''
+
 class block(nn.Module):
     def __init__(self, in_channels, intermediate_channels, identity_downsample=None, stride=1) -> None:
         super(block, self).__init__()
