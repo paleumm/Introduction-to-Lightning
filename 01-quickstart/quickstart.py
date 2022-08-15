@@ -4,6 +4,7 @@ from torchvision import datasets
 from torch.utils.data import DataLoader
 from torchvision.transforms import ToTensor
 from torch.optim import SGD
+import torchmetrics
 
 class NeuralNetwork(LightningModule):
     def __init__(self):
@@ -17,6 +18,7 @@ class NeuralNetwork(LightningModule):
             nn.Linear(512, 10)     
         )
         self.loss_fn = nn.CrossEntropyLoss()
+        self.accuracy = torchmetrics.Accuracy()
 
     def forward(self, x):
         return self.linear_relu_stack(self.flatten(x))
@@ -26,9 +28,13 @@ class NeuralNetwork(LightningModule):
 
         pred = self.linear_relu_stack(self.flatten(data))
         loss = self.loss_fn(pred, label)
+        self.accuracy(pred, label)
 
         self.log("train-loss : ", loss)
         return loss
+    
+    def training_epoch_end(self, outputs) -> None:
+        self.log('train_acc_epoch', self.accuracy)
 
     def test_step(self, batch, batch_idx):
         data, label = batch
