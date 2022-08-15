@@ -2,6 +2,7 @@
 
 ### Model list
 
+#### ResNet
 - `LitResNet`
 - `LitResNet50`
 - `LitResNet101`
